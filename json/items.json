@@ -1,0 +1,162 @@
+{
+    "change": {
+        "name": "Handful of change",
+        "slots": "1",
+        "type": "ranged",
+        "damage": 1,
+        "durability": 3,
+        "attack": "You throw the coins at the ",
+        "break": "You ran out of coins.",
+        "faildamage": "yes"
+    },
+    "clothes": {
+        "name": "Clothes",
+        "slots": "2",
+        "type": "ranged",
+        "damage": 1,
+        "durability": 5,
+        "attack": "You throw some clothes at the ",
+        "break": "You ran out of clothes.",
+        "faildamage": "yes"
+    },
+    "fork": {
+        "name": "Fork",
+        "slots": "1",
+        "type": "melee",
+        "damage": 2,
+        "durability": 2,
+        "attack": "You thrust the fork at the ",
+        "break": "The fork snaps.",
+        "faildamage": "no"
+    },
+    "spoon": {
+        "name": "Spoon",
+        "slots": "1",
+        "type": "melee",
+        "damage": 1,
+        "durability": 2,
+        "attack": "You thrust the spoon at the ",
+        "break": "The spoon snaps.",
+        "faildamage": "no"
+    },
+    "butterknife": {
+        "name": "Butter knife",
+        "slots": "1",
+        "type": "melee",
+        "damage": 3,
+        "durability": 2,
+        "attack": "You thrust the butter knife at the ",
+        "break": "The butter knife snaps.",
+        "faildamage": "no"
+    },
+    "plate": {
+        "name": "Plate",
+        "slots": "3",
+        "type": "melee",
+        "damage": 20,
+        "durability": 1,
+        "attack": "You smash the plate against the ",
+        "break": "The plate shatters.",
+        "faildamage": "no"
+    },
+    "kitchenknife": {
+        "name": "Kitchen knife",
+        "slots": "2",
+        "type": "melee",
+        "damage": 30,
+        "durability": 15,
+        "attack": "You stab the kitchen knife at the ",
+        "break": "The kitchen knife's blade breaks.",
+        "faildamage": "no"
+    },
+    "scissors": {
+        "name": "Pair of scissors",
+        "slots": "1",
+        "type": "melee",
+        "damage": 25,
+        "durability": 20,
+        "attack": "You stab the scissors at the ",
+        "break": "The scissors break.",
+        "faildamage": "no"
+    },
+    "survival_knife": {
+        "name": "Survival knife",
+        "slots": "1",
+        "type": "melee",
+        "damage": 40,
+        "durability": 30,
+        "attack": "You stab the survival knife at the ",
+        "break": "The survival knife snaps at the hinge,\n  and parts fall all over the floor.",
+        "faildamage": "no"
+    },
+    "vhs": {
+        "name": "VHS tape",
+        "slots": "2",
+        "type": "melee",
+        "damage": 10,
+        "durability": 20,
+        "attack": "You swing the VHS tape at the ",
+        "break": "The VHS tape snaps and all the tape flows out.\n  There goes aunt Sue's wedding.",
+        "faildamage": "no"
+    },
+    "book": {
+        "name": "Book",
+        "slots": "2",
+        "type": "melee",
+        "damage": 15,
+        "durability": 30,
+        "attack": "You swing the book at the ",
+        "break": "The book's binding comes apart, and the pages fall out.",
+        "faildamage": "no"
+    },
+    "baseball_bat": {
+        "name": "Baseball bat",
+        "slots": "4",
+        "type": "melee",
+        "damage": 40,
+        "durability": 30,
+        "attack": "You swing the baseball bat at the ",
+        "break": "The baseball bat snaps into pieces.",
+        "faildamage": "no"
+    },
+    "axe": {
+        "name": "Axe",
+        "slots": "4",
+        "type": "melee",
+        "damage": 60,
+        "durability": 40,
+        "attack": "You swing the axe at the ",
+        "break": "The axe head breaks off.",
+        "faildamage": "no"
+    },
+    "revolver": {
+        "name": "Revolver",
+        "slots": "4",
+        "type": "ranged",
+        "damage": 75,
+        "durability": 6,
+        "attack": "You fire the revolver at the ",
+        "break": "The revolver clicks. It's out of ammo.",
+        "faildamage": "yes"
+    },
+    "rifle": {
+        "name": "Hunting rifle",
+        "slots": "4",
+        "type": "ranged",
+        "damage": 100,
+        "durability": 5,
+        "attack": "You fire the rifle at the ",
+        "break": "You pull the bolt back. It's out of ammo.",
+        "faildamage": "yes"
+    },
+    "shotgun": {
+        "name": "Shotgun",
+        "slots": "8",
+        "type": "ranged",
+        "damage": 100,
+        "durability": 5,
+        "attack": "You fire the shotgun at the ",
+        "break": "The shotgun clicks. It's out of ammo.",
+        "faildamage": "yes"
+    }
+}
