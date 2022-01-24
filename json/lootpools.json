@@ -1,6 +1,6 @@
 {
     "Rack": {
-        "loot": ["baseball_bat", "baseball_bat", "baseball_bat", "baseball_bat", "rifle", "shotgun"],
+        "loot": ["baseballbat", "baseballbat", "baseballbat", "baseballbat", "rifle", "shotgun"],
         "lootchance": [90],
         "reloot": "no"
     },
@@ -40,7 +40,7 @@
         "reloot": "yes"
     },
     "Bed cache": {
-        "loot": ["revolver", "axe", "shotgun", "rifle", "baseball_bat", "survival_knife"],
+        "loot": ["revolver", "axe", "shotgun", "rifle", "baseballbat", "survivalknife"],
         "lootchance": [50],
         "reloot": "no"
     }

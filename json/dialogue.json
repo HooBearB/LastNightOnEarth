@@ -192,7 +192,7 @@
             "2": "a CLANG!",
             "3": "some shifting",
             "4": "something moving",
-            "5": "a door closing",
+            "5": "the sound of a door closing",
             "6": "a loud screeching"
         }
     },
@@ -216,6 +216,19 @@
             "15": "I'm working on modding guides, sorry it's just a mess",
             "16": "Just sit anywhere sorry for the mess",
             "17": "Combat is literally broken, you're immortal currently"
+        },
+        "huntstart": {
+            "number": 10,
+            "1": "A sinking feeling forms in your gut.",
+            "2": "A sudden piercing feeling erupts from your head.",
+            "3": "It feels like something just stabbed you in the abdomen.",
+            "4": "It feels like something's biting you.",
+            "5": "It feels like something just bit you.",
+            "6": "Words start to echo in your mind.",
+            "7": "Your stomach suddenly starts hurting.",
+            "8": "Something feels off.",
+            "9": "Something's wrong.",
+            "10": "Something doesn't feel right."
         }
     }
 }

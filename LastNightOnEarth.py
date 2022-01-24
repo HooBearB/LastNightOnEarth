@@ -2,7 +2,8 @@ import random
 import json
 import os
 import time
-from turtle import update
+
+from pip import main
 
 class format:
     clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
@@ -96,6 +97,7 @@ def testVariables():
     global equippedDurability
     global shadows
     global shadowhealth
+    global difficulty
 
     x = 1
     y = 1
@@ -103,13 +105,14 @@ def testVariables():
     hours = 1
     minutes = random.randint(0, 59)
     period = "AM"
-    inventory = ["TEST_BAT", "TEST_SHOTGUN", "TEST_REVOLVER"]
-    inventoryIDs = ["baseball_bat", "shotgun", "revolver"]
-    inventoryDurability = [3, 5, 6]
+    inventory = ["TEST_BAT", "TEST_SHOTGUN", "TEST_REVOLVER", "ROCKET_LAUNCHER"]
+    inventoryIDs = ["baseballbat", "shotgun", "revolver", "rocketlauncher"]
+    inventoryDurability = [3, 5, 6, 1]
     equipped = "None"
     equippedDurability = 0
     shadows = ["diningroom"]
     shadowhealth = [100]
+    difficulty = 1
 
 def updateTime(addminutes = 0):
     global minutes
@@ -159,7 +162,7 @@ def ask(message, indent, options, delay):
             while y <= indent:
                 print(" ", end = "")
                 y = y + 1
-            x = int(input("Invalid input!\n  > "))
+            x = int(input("Invalid input!\n   > "))
     return x
 
 def askString(message, indent):
@@ -178,10 +181,10 @@ def genShadows():
     global shadows
     global huntstart
     global huntbegin
-    if hours >= 8 and minutes >= 30:
+    if (hours >= 8 and minutes >= 30 and period == "PM") or (hours <= 6 and period == "AM"):
         if huntstart == 0:
             huntstart = 1
-            huntbegin = format.red + format.bold + "  The hunt begins." + format.end
+            huntbegin = format.red + format.bold + "  " + fetchDialogue("menu", "huntstart") + format.end
         if len(shadows) < difficulty * 2:
             rand = random.randint(1, 5)
             if rand == 1:
@@ -189,6 +192,83 @@ def genShadows():
                 rand = random.randint(0, len(roomlist) - 1)
                 shadows.append(roomlist[rand])
                 shadowhealth.append(100 * difficulty)
+        rand = random.randint(0, 3)
+        if rand == 1:
+            run = 0
+            layout = maps[building]["layout"]
+            while run < len(shadows):
+                vertical = 0
+                while vertical <= len(layout) and shadows[run] not in layout[vertical]:
+                    if shadows[run] in layout[vertical]:
+                        horizontal = layout[vertical].index(shadows[run])
+                        shadowdirections = []
+                        if layout[vertical - 1][horizontal] == "open":
+                            shadowdirections.append("up")
+                        if layout[vertical + 1][horizontal] == "open":
+                            shadowdirections.append("down")
+                        if layout[vertical][horizontal - 1] == "open":
+                            shadowdirections.append("left")
+                        if layout[vertical][horizontal + 1] == "open":
+                            shadowdirections.append("right")
+                        if len(shadowdirections) > 0:
+                            dir = random.randint(0, (len(shadowdirections) - 1))
+                            print("dir: " + str(dir))
+                            print(shadowdirections)
+                            print(str(run) + "/" + str(len(shadows)))
+                            time.sleep(1)
+                            if shadowdirections[dir] == "up":
+                                vertical = vertical - 2
+                                shadows[run] = layout[vertical][horizontal]
+                            if shadowdirections[dir] == "down":
+                                vertical = vertical + 2
+                                shadows[run] = layout[vertical][horizontal]
+                            if shadowdirections[dir] == "left":
+                                horizontal = horizontal - 2
+                                shadows[run] = layout[vertical][horizontal]
+                            if shadowdirections[dir] == "right":
+                                horizontal = horizontal + 2
+                                shadows[run] = layout[vertical][horizontal]
+                    else:
+                        vertical = vertical + 1
+                run = run + 1
+
+def checkHealth():
+    global headHealth
+    global torsoHealth
+    global leftArmHealth
+    global rightArmHealth
+    global leftLegHealth
+    global rightLegHealth
+    global sanity
+
+    actions = ""
+    if headHealth <= 0:
+        death("head")
+    if torsoHealth <= 0:
+        death("torso")
+    if leftArmHealth <= 0:
+        actions = actions + "\n  " + format.red + format.bold + "You wince in pain. Your left arm is crippled." + format.end
+    if rightArmHealth <= 0:
+        actions = actions + "\n  " + format.red + format.bold + "You wince in pain. Your right arm is crippled." + format.end
+    if leftLegHealth <= 0:
+        actions = actions + "\n  " + format.red + format.bold + "You wince in pain. Your left leg is crippled." + format.end
+    if rightLegHealth <= 0:
+        actions = actions + "\n  " + format.red + format.bold + "You wince in pain. Your right leg is crippled." + format.end
+    if headHealth + 1 <= 50:
+        headHealth = headHealth + 1
+    if torsoHealth + 1 <= 100:
+        torsoHealth = torsoHealth + 1
+    if leftArmHealth + 1 <= 75:
+        leftArmHealth = leftArmHealth + 1
+    if rightArmHealth + 1 <= 75:
+        rightArmHealth = rightArmHealth + 1
+    if leftLegHealth + 1 <= 75:
+        leftLegHealth = leftLegHealth + 1
+    if rightLegHealth + 1 <= 75:
+        rightLegHealth = rightLegHealth + 1
+    if sanity + 1 <= 100:
+        sanity = sanity + 1
+    return actions
 
 def fetchDialogue(speaker, prompt):
     return dialogue[speaker][prompt][str(random.randint(1, dialogue[speaker][prompt]["number"]))]
@@ -219,7 +299,112 @@ def cutsceneOther(message, indent, delay):
         y = y + 1
     print("")
 
+def death(target):
+    print(format.clear)
+    cutsceneOther(format.red + format.bold + "The shadow hits you in the " + target + "." + format.end, 2, 0.05)
+    time.sleep(1)
+    cutsceneDialogue(fetchDialogue("player", "attacked"), 2, 0.05)
+    time.sleep(3)
+    cutsceneOther(format.red + format.bold + "You die." + format.end, 2, 0.05)
+    time.sleep(3)
+    input("\n  Press " + format.bold + "enter" + format.end + " to continue.  ")
+    print(format.clear)
+    time.sleep(1)
+    playerDecision = ask("Return to the menu, or watch the ending cutscenes?", 2, ["Watch cutscenes", "Return to menu"], 0.25)
+    if playerDecision == 2:
+        mainMenu()
+    else:
+        print(format.clear)
+        time.sleep(3)
+        cutsceneOther("March " + str(6 + day) + ", 2013", 2, 0.05)
+        cutsceneOther("Bell ridge police department", 2, 0.05)
+        cutsceneOther("-------------------------------", 2, 0.01)
+        time.sleep(2)
+        cutsceneOther("Police recovered a body from the Marshall residence at approximately", 2, 0.05)
+        cutsceneOther("9:14 am. Victim had taken numerous blunt attacks throughout the", 2, 0.05)
+        cutsceneOther("body, but postmortem examination has revealed that the immediate", 2, 0.05)
+        cutsceneOther("cause of death was due to extensive damage to the " + target + " area.", 2, 0.05)
+        cutsceneOther("-------------------------------", 2, 0.01)
+        time.sleep(2)
+        cutsceneOther("Current theories in the case include possible home invasion", 2, 0.05)
+        cutsceneOther("with the intent of homicide.", 2, 0.05)
+        time.sleep(3)
+        input("\n  Press " + format.bold + "enter" + format.end + " to continue.  ")
+        print(format.clear)
+        time.sleep(2)
+        cutsceneDialogue("It wasn't your fault, Lindsay.", 2, 0.05)
+        time.sleep(3)
+        print(format.clear)
+        apartment = """
+  ──────═══─────┐
+         i      │
+             ─┐ │
+   ┌─┐    ║  u│ │
+   │ │    ║  ▓│ │
+   └─┘       ─┘ │"""
+        print(apartment)
+        print("\n  " + format.bold + "Vanessa" + format.end + ", friend\n  Apartment, 8:54am")
+        print("")
+        time.sleep(0.5)
+        cutsceneDialogue("It really wasn't.", 2, 0.05)
+        time.sleep(0.5)
+        cutsceneDialogue("I don't know why you're blaming yourself for this.", 2, 0.05)
+        input("\n  Press " + format.bold + "enter" + format.end + " to continue.  ")
+        print(format.clear)
+        print(apartment)
+        print("\n  " + format.bold + "Lindsay" + format.end + ", caretaker\n  Apartment, 8:55am")
+        print("")
+        cutsceneDialogue("Oh god, I was the last one to see him though!", 2, 0.05)
+        time.sleep(0.5)
+        cutsceneDialogue("What if he knew something was wrong?", 2, 0.05)
+        input("\n  Press " + format.bold + "enter" + format.end + " to continue.  ")
+        print(format.clear)
+        print(apartment)
+        print("\n  " + format.bold + "Vanessa" + format.end + ", friend\n  Apartment, 8:55am")
+        print("")
+        cutsceneDialogue("My god. Stop blaming yourself.", 2, 0.05)
+        time.sleep(0.5)
+        cutsceneDialogue("If he knew something was wrong, he'd have gone and said it.", 2, 0.05)
+        input("\n  Press " + format.bold + "enter" + format.end + " to continue.  ")
+        print(format.clear)
+        print(apartment)
+        print("\n  " + format.bold + "Vanessa" + format.end + ", friend\n  Apartment, 8:55am")
+        print("")
+        cutsceneDialogue("We both knew him, you know.", 2, 0.05)
+        input("\n  Press " + format.bold + "enter" + format.end + " to continue.  ")
+        print(format.clear)
+        print(apartment)
+        print("\n  " + format.bold + "Vanessa" + format.end + ", friend\n  Apartment, 8:56am")
+        print("")
+        cutsceneDialogue("Look, even if he knew, it still wouldn't be your fault.", 2, 0.05)
+        time.sleep(1)
+        cutsceneDialogue("It'd still be the fault of the bastard that killed him.", 2, 0.05)
+        input("\n  Press " + format.bold + "enter" + format.end + " to continue.  ")
+        print(format.clear)
+        print(apartment)
+        print("\n  " + format.bold + "Lindsay" + format.end + ", caretaker\n  Apartment, 8:57am")
+        print("")
+        cutsceneDialogue("God...", 2, 0.05)
+        input("\n  Press " + format.bold + "enter" + format.end + " to continue.  ")
+        print(format.clear)
+        print(apartment)
+        print("\n  " + format.bold + "Vanessa" + format.end + ", friend\n  Apartment, 8:57am")
+        print("")
+        cutsceneDialogue("We gotta get to the meeting with the police on this though.", 2, 0.05)
+        time.sleep(0.5)
+        cutsceneDialogue("C'mon. We'll get through this. We'll find the bastard.", 2, 0.05)
+        time.sleep(3)
+        print(format.clear)
+        time.sleep(3)
+        cutsceneDialogue("We'll find em.", 2, 0.05)
+        time.sleep(4)
+        print(format.clear)
+        time.sleep(0.5)
+        input("\n  Press " + format.bold + "enter" + format.end + " to return to the menu.  ")
+        mainMenu()
+    
 def mainMenu():
+    print(format.clear)
     print(format.bold + format.red)
     print("          __      ______  ______  ______")
     print("         / /     / __  / / ____/ /_  __/")
@@ -444,6 +629,8 @@ def printMap(dialogue="", action=""):
     shadowin = ""
     if room in shadows:
         shadowin = "s"
+    if checkHealth() != "":
+        action = action + checkHealth()
     print(maps[building][room]["side" + str(side)]["1" + shadowin])
     print(maps[building][room]["side" + str(side)]["2" + shadowin])
     print(maps[building][room]["side" + str(side)]["3" + shadowin])
@@ -580,6 +767,11 @@ def inv():
             cutsceneOther(format.bold + item["name"] + format.end, 2, 0.01)
             print("  Damage: " + format.red + str(item["damage"]) + format.end)
             print("  Durability: " + format.green + str(inventoryDurability[playerDecision - 1]) + format.end + "/" + format.blue + str(item["durability"]) + format.end)
+            print("  " + item["1"])
+            print("  " + item["2"])
+            print("  " + item["3"])
+            print("  " + item["4"])
+            print("  " + item["5"])
             print("")
             playerDecision = ask("Item options:", 1, ["Equip item", "Drop item", "Exit menu"], 0.1)
             if playerDecision == 1:
@@ -691,6 +883,7 @@ def combat():
     print("")
 
     if playerDecision == 1:
+        updateTime(random.randint(1, 4) * 10)
         said = ""
         roll = random.randint(1, 10)
         currentshadow = shadows.index(room)
@@ -722,17 +915,22 @@ def combat():
             rand = random.randint(1,5)
             if rand == 3:
                 said = fetchDialogue("player", "attackmissed")
-            action = (format.blue + items[equipped]["attack"] + "shadow." + format.end)
+            if equipped != "None":
+                action = (format.blue + items[equipped]["attack"] + "shadow." + format.end)
+            else:
+                action = (format.blue + "You swing at the shadow with your fists." + format.end)
             action = action + enemyHit()
             action = action + format.red + format.bold + "\n  Attack missed!" + format.end
-            if items[equipped]["faildamage"] == "yes":
-                equippedDurability = equippedDurability - 1
+            if equipped != "None":
+                if items[equipped]["faildamage"] == "yes":
+                    equippedDurability = equippedDurability - 1
         if shadowhealth[currentshadow] <= 0:
             action = action + "\n  " + format.green + format.bold + "The shadow dies." + format.end
             shadows.pop(currentshadow)
             shadowhealth.pop(currentshadow)
         printMap(said, action)
     if playerDecision == 2:
+        updateTime(random.randint(1, 4) * 10)
         rand = random.randint(1, 3)
         said = ""
         action = ""
@@ -751,6 +949,7 @@ def combat():
         action = action + enemyHit(block)
         printMap(said, action)
     if playerDecision == 3:
+        updateTime(random.randint(1, 4) * 10)
         rand = random.randint(1, 5)
         if rand <= 2:
             action = format.blue + "You jump out of the way." + format.end
@@ -909,9 +1108,4 @@ def demoContent():
     input("\n  Press " + format.bold + "enter" + format.end + " to return to the menu.  ")
     mainMenu()
 
-
-
 mainMenu()
-#defineVariables()
-#testVariables()
-#startNew()
